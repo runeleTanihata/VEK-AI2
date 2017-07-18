@@ -24,6 +24,9 @@ const uint16_t  PWM2ReadPin = 3;
 
 #define PWM_MOTOR_DUTY_RESOLUTION (400)
 
+#define NO_CAPTURE_PWM1_LIMIT (5)
+#define NO_CAPTURE_PWM2_LIMIT (5)
+
 uint32_t  PWM1_pulseTimeH_start, PWM1_pulseTimeH_end;
 uint32_t  PWM1_pulseTimeH;
 bool      oldPWMIN1Pin_state, PWMIN1Pin_state;
@@ -211,6 +214,10 @@ void loop() {
     if(oldPWM1_pulseTimeH_end == PWM1_pulseTimeH_end)
     {
       cNoCapturePWM1++;
+      if(cNoCapturePWM1 >= NO_CAPTURE_PWM1_LIMIT)
+      {
+        cNoCapturePWM1 = NO_CAPTURE_PWM1_LIMIT;
+      }
     }
     else
     {
@@ -221,6 +228,10 @@ void loop() {
     if(oldPWM2_pulseTimeH_end == PWM2_pulseTimeH_end)
     {
       cNoCapturePWM2++;
+      if(cNoCapturePWM2 >= NO_CAPTURE_PWM2_LIMIT)
+      {
+        cNoCapturePWM2 = NO_CAPTURE_PWM2_LIMIT;
+      }
     }
     else
     {
@@ -228,15 +239,14 @@ void loop() {
     }
     oldPWM2_pulseTimeH_end = PWM2_pulseTimeH_end;
     
-    if( (cNoCapturePWM1>=5) || (cNoCapturePWM2>=5) )
+    if( (cNoCapturePWM1>=NO_CAPTURE_PWM1_LIMIT) || (cNoCapturePWM2>=NO_CAPTURE_PWM2_LIMIT) )
     {
-      if(cNoCapturePWM1>=5) 
+      if(cNoCapturePWM1>=NO_CAPTURE_PWM1_LIMIT) 
       {
         fNoCapturePWM1 = 1;
       }
       else
       {
-        //Serial2.println("PWM2 No signal!");
         fNoCapturePWM2 = 1;
       }
     }
